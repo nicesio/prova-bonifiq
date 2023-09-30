@@ -4,9 +4,14 @@ using ProvaPub.Repository;
 
 namespace ProvaPub.Services
 {
-    public class CustomerService
+    public interface ICustomerService
     {
-        TestDbContext _ctx;
+        CustomerList ListCustomers(int page);
+        Task<bool> CanPurchase(int customerId, decimal purchaseValue);
+    }
+    public class CustomerService: ICustomerService
+    {
+        protected readonly TestDbContext _ctx;
 
         public CustomerService(TestDbContext ctx)
         {
@@ -15,7 +20,7 @@ namespace ProvaPub.Services
 
         public CustomerList ListCustomers(int page)
         {
-            return new CustomerList() { HasNext = false, TotalCount = 10, Customers = _ctx.Customers.ToList() };
+            return new CustomerList() { HasNext = false, TotalCount = 10, Customers = _ctx.Customers.Skip((page - 1) * 10).Take(10).ToList() };
         }
 
         public async Task<bool> CanPurchase(int customerId, decimal purchaseValue)

@@ -4,20 +4,30 @@ namespace ProvaPub.Services
 {
 	public class OrderService
 	{
-		public async Task<Order> PayOrder(string paymentMethod, decimal paymentValue, int customerId)
+		public Order FazpagamentoPix(){
+			return new Order();
+		}
+
+		public Order FazpagamentoCreditCard(){
+            return new Order();
+        }
+		public Order FazpagamentoPaypal(){
+            return new Order();
+        }
+
+        public async Task<Order> PayOrder(string paymentMethod, decimal paymentValue, int customerId)
 		{
-			if (paymentMethod == "pix")
+			switch (paymentMethod)
 			{
-				//Faz pagamento...
-			}
-			else if (paymentMethod == "creditcard")
-			{
-				//Faz pagamento...
-			}
-			else if (paymentMethod == "paypal")
-			{
-				//Faz pagamento...
-			}
+				case "pix":
+					return FazpagamentoPix();
+				case "creditcard":
+                    return FazpagamentoCreditCard();
+                case "paypal":
+                    return FazpagamentoPaypal();
+                default:
+                    throw new Exception($"Método de pagamento inválido: {paymentMethod}");
+            }
 
 			return await Task.FromResult( new Order()
 			{
